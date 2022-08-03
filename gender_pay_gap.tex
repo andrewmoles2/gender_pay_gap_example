@@ -1,0 +1,288 @@
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  11pt,
+]{article}
+\usepackage{amsmath,amssymb}
+\usepackage[]{mathpazo}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+\usepackage{xcolor}
+\usepackage[margin=1in]{geometry}
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+% Set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{-\maxdimen} % remove section numbering
+\ifLuaTeX
+  \usepackage{selnolig}  % disable illegal ligatures
+\fi
+\usepackage[]{natbib}
+\bibliographystyle{apsr}
+\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same} % disable monospaced font for URLs
+\hypersetup{
+  pdftitle={An example document looking into the gender pay gap in UK companies},
+  pdfauthor={Andrew Moles; Sara Luxmoore},
+  pdfkeywords={pandoc, r markdown, knitr},
+  colorlinks=true,
+  linkcolor={red},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={blue},
+  pdfcreator={LaTeX via pandoc}}
+
+\title{An example document looking into the gender pay gap in UK
+companies\thanks{Replication files are available on the author's Github
+account}}
+\author{Andrew Moles \and Sara Luxmoore}
+\date{03 August, 2022}
+
+\begin{document}
+\maketitle
+\begin{abstract}
+The gender pay gap has been an issue for generations, but how are UK
+companies doing in the current climate?
+\end{abstract}
+
+\newpage
+
+\raggedright
+\newpage
+\setcounter{tocdepth}{4}
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+International women's day in 2022 was full of drama in the Twitter
+world. This was caused by the
+\href{https://genderpaygap.app/}{\emph{Gender Pay Gap Bot}}. Whenever a
+company listed on the
+\href{https://gender-pay-gap.service.gov.uk/}{governments gender pay gap
+service} tweets about international women's day, the bot will
+automatically respond with that companies median gender pay gap.
+
+\begin{figure}
+
+{\centering \includegraphics[width=0.7\linewidth]{pay_gap_bot} 
+
+}
+
+\caption{The gender pay gap bot in action}\label{fig:botimage}
+\end{figure}
+
+The bot caused a lot of companies to remove their tweets and even post
+some amendments. The point of the project was to call out companies that
+talked a good talk but had very poor gender pay equality.
+
+This report wanted to look more into the governments gender pay gap
+service data to see if we could see any extra insights or interesting
+patterns.
+
+\newpage
+
+\hypertarget{methods}{%
+\section{Methods}\label{methods}}
+
+The data used for this report is from the UK
+\href{https://gender-pay-gap.service.gov.uk/}{governments gender pay gap
+service}. This data has been helpfully hosted and joined together by
+\href{https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-06-28}{the
+TidyTuesday project}.
+
+There are several variables of interest which we can use in an analysis
+of this data: DiffMeanHourlyPercent, DiffMedianHourlyPercent, PostCode,
+SicCodes, and EmployerSize.
+
+DiffMeanHourlyPercent and DiffMedianHourlyPercent are the mean or median
+\% difference between male and female hourly pay (negative = women's
+mean/median hourly pay is higher). PostCode is each companies postal
+code. SicCodes are used to describe the employer's purpose and sectors
+of work at the time of reporting, e.g.~the company is in the finance
+sector. EmployerSize indicates the number of employers which is grouped
+into bands such as \emph{250 to 499} or \emph{5000 to 19,999}.
+
+The formula used to calculate the DiffMeanHourlyPercent and
+DiffMedianHourlyPercent columns is as follows:
+
+\[((original value - new value) \div original value) * 100\] If females
+are paid better, the data will show a minus value for that column. This
+is because the original value in the formula is male as shown below:
+\[((male - female) \div male) * 100\] In the analysis of the data
+several R packages were used which are: the tidyverse \citep{tidyverse},
+tidytext \citep{tidytext}, ggtext \citep{ggtext}, patchwork
+\citep{patchwork}, geogrid \citep{geogrid}, rmapshaper
+\citep{rmapshaper}, and sf \citep{sf}.
+
+\newpage
+
+\hypertarget{results}{%
+\section{Results}\label{results}}
+
+We can first look at the sector averages, here we are looking at the top
+10 sectors that have, on average, the largest percent gap in men's wages
+compared to women's wages. To get the sectors, Tokenisation\footnote{Tokenisation
+  is a way of separating text into smaller units called \emph{tokens},
+  which can be either words, characters or sub words.} of Standard
+industrial classification of economic activities (SIC) codes was used in
+an attempted to simplify the results.
+
+\begin{longtable}[]{@{}lc@{}}
+\caption{Table to show the sectors with, on average, the largest percent
+gap in men's wages compared to women's wages.}\tabularnewline
+\toprule()
+\textbf{sector} & \textbf{percent increase in mens wages compared to
+womens} \\
+\midrule()
+\endfirsthead
+\toprule()
+\textbf{sector} & \textbf{percent increase in mens wages compared to
+womens} \\
+\midrule()
+\endhead
+primary & 0.2835 \\
+secondary & 0.2494 \\
+education & 0.2383 \\
+financial & 0.2112 \\
+construction & 0.1978 \\
+technology & 0.1932 \\
+information & 0.1892 \\
+head & 0.164 \\
+offices & 0.164 \\
+technical & 0.1615 \\
+\bottomrule()
+\end{longtable}
+
+Ideas for this analysis were taken from from this blog post by
+\href{https://juliasilge.com/blog/pay-gap-uk/}{Julia Silge}.
+
+A more elaborate analysis we can do is to look at the gender pay gap by
+company size and by postcode area. Figure \ref{fig:makefigure} gives us
+an overall general picture of this difference by area. The clearest
+outcome here is that most of the grids for all employee sizes are green
+or black, the black hexagons indicating missing data for the postcode
+area. There are seemingly some areas where this isn't so much the case,
+which seem to be around Lancashire and Northumberland.
+
+\begin{figure}[p]
+
+{\centering \includegraphics[width=0.8\linewidth]{gender_pay_gap_files/figure-latex/geomaps-1} 
+
+}
+
+\caption{\label{fig:makefigure} Median percentage difference in hourly pay by postcode area and company size}\label{fig:geomaps}
+\end{figure}
+
+The code for Figure \ref{fig:makefigure} came from
+\href{https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26}{Georgios
+Karamandis} as a Tidy Tuesday contribution.
+
+\newpage
+
+\hypertarget{discussion}{%
+\section{Discussion}\label{discussion}}
+
+Theresa May, in her first statement as Prime Minister highlighted that:
+
+\begin{quote}
+``If you're a woman, you will earn less than a man.''
+\end{quote}
+
+Our results show that on average, this is still the case but there are a
+lot of caveats.
+
+Pay between genders is complicated as it does vary over a lifetime. It
+can differ depending on whether you are looking at full-time or
+part-time working (or both), what age you are, what ethnicity you are
+and your seniority within an occupation. For example there may be a
+wider (or narrower) GPG in those earning a higher salary as an actor
+than in those earning a lower salary.
+
+It's also important to consider the ratio of men to women in each
+occupation and whether any difference is due to one gender being
+disadvantaged in this field or whether they are just naturally more or
+less inclined go into that type of work\footnote{This text was taken
+  from
+  \href{https://www.ons.gov.uk/employmentandlabourmarket/peopleinwork/earningsandworkinghours/articles/testyourknowledgeonthegenderpaygap/2016-12-09}{ONS
+  gender pay gap web pages}}.
+
+The reasons for the gender pay gap are complex and overlapping:
+
+\begin{itemize}
+\item
+  girls do well at school but often choose occupations or sectors that
+  offer narrower scope for financial reward - many of the highest paying
+  sectors are disproportionately made up of male employees.
+\item
+  a proportion of the gap may be due to the negative effect on wages of
+  having worked part-time or having taken time out of the labour market
+  to look after family.
+\item
+  women may not progress in work at the same rate as men due to cultural
+  attitudes, lack of flexible working and stereotyping.
+\item
+  some older women may need to learn new skills to take advantage of
+  employment opportunities in growing sectors; others may have increased
+  caring responsibilities for partners, grandchildren or ageing parents.
+\end{itemize}
+
+\newpage
+
+  \bibliography{references.bib}
+
+\end{document}
