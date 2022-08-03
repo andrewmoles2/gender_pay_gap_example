@@ -6,7 +6,7 @@ output:
     fig_caption: true
     latex_engine: pdflatex
 title: "An example document looking into the gender pay gap in UK companies"
-thanks: "Replication files are available on the author's Github account"
+thanks: "Replication files are available on the [author's Github account](https://github.com/andrewmoles2/gender_pay_gap_example)"
 author: 
 - Andrew Moles
 - Sara Luxmoore
