@@ -9,7 +9,7 @@ title: "An example document looking into the gender pay gap in UK companies"
 thanks: "Replication files are available on the [author's Github account](https://github.com/andrewmoles2/gender_pay_gap_example)"
 author: 
 - Andrew Moles
-- Sara Luxmoore
+- Anton Boichenko
 abstract: "The gender pay gap has been an issue for generations, but how are UK companies doing in the current climate?"
 keywords: "pandoc, r markdown, knitr"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
@@ -63,9 +63,11 @@ DiffMeanHourlyPercent and DiffMedianHourlyPercent are the mean or median % diffe
 
 The formula used to calculate the DiffMeanHourlyPercent and DiffMedianHourlyPercent columns is as follows:
 
-$$((original value - new value) \div original value) * 100$$
+$$ {{value_{original} - value_{new}} \over {value_{original}}} \times 100 $$
+
 If females are paid better, the data will show a minus value for that column. This is because the original value in the formula is male as shown below:
-$$((male - female) \div male) * 100$$
+$$ {{male\_wage - female\_wage \over male\_wage}} \times 100 $$
+
 In the analysis of the data several R packages were used which are: the tidyverse [@tidyverse], tidytext [@tidytext], ggtext [@ggtext], patchwork [@patchwork], geogrid [@geogrid], rmapshaper [@rmapshaper], and sf [@sf]. 
 
 <!--

@@ -73,7 +73,7 @@
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
   pdftitle={An example document looking into the gender pay gap in UK companies},
-  pdfauthor={Andrew Moles; Sara Luxmoore},
+  pdfauthor={Andrew Moles; Anton Boichenko},
   pdfkeywords={pandoc, r markdown, knitr},
   colorlinks=true,
   linkcolor={red},
@@ -86,8 +86,8 @@
 companies\thanks{Replication files are available on the
 \href{https://github.com/andrewmoles2/gender_pay_gap_example}{author's
 Github account}}}
-\author{Andrew Moles \and Sara Luxmoore}
-\date{03 August, 2022}
+\author{Andrew Moles \and Anton Boichenko}
+\date{02 September, 2022}
 
 \begin{document}
 \maketitle
@@ -161,14 +161,17 @@ into bands such as \emph{250 to 499} or \emph{5000 to 19,999}.
 The formula used to calculate the DiffMeanHourlyPercent and
 DiffMedianHourlyPercent columns is as follows:
 
-\[((original value - new value) \div original value) * 100\] If females
-are paid better, the data will show a minus value for that column. This
-is because the original value in the formula is male as shown below:
-\[((male - female) \div male) * 100\] In the analysis of the data
-several R packages were used which are: the tidyverse \citep{tidyverse},
-tidytext \citep{tidytext}, ggtext \citep{ggtext}, patchwork
-\citep{patchwork}, geogrid \citep{geogrid}, rmapshaper
-\citep{rmapshaper}, and sf \citep{sf}.
+\[ {{value_{original} - value_{new}} \over {value_{original}}} \times 100 \]
+
+If females are paid better, the data will show a minus value for that
+column. This is because the original value in the formula is male as
+shown below:
+\[ {{male\_wage - female\_wage \over male\_wage}} \times 100 \]
+
+In the analysis of the data several R packages were used which are: the
+tidyverse \citep{tidyverse}, tidytext \citep{tidytext}, ggtext
+\citep{ggtext}, patchwork \citep{patchwork}, geogrid \citep{geogrid},
+rmapshaper \citep{rmapshaper}, and sf \citep{sf}.
 
 \newpage
 
