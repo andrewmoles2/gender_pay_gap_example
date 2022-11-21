@@ -25,6 +25,7 @@ abstract: "The gender pay gap has been an issue for generations, but how are UK 
 keywords: "pandoc, r markdown, knitr"
 date: "`r format(Sys.time(), '%d %B, %Y')`"
 bibliography: "references.bib"
+# linestretch: 2 # to apply double spacing
 ---
 
 \newpage
