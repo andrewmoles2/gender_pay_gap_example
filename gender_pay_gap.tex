@@ -5,10 +5,11 @@
 %
 \documentclass[
   11pt,
-]{article}
+  letterpaper,
+  DIV=11,
+  numbers=noendperiod]{scrartcl}
 
 \usepackage{amsmath,amssymb}
-\usepackage{lmodern}
 \usepackage{iftex}
 \ifPDFTeX
   \usepackage[T1]{fontenc}
@@ -18,6 +19,11 @@
   \usepackage{unicode-math}
   \defaultfontfeatures{Scale=MatchLowercase}
   \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else  
+    % xetex/luatex font selection
+  \setmainfont[]{Roboto}
 \fi
 % Use upquote if available, for straight quotes in verbatim environments
 \IfFileExists{upquote.sty}{\usepackage{upquote}}{}
@@ -74,11 +80,41 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
+% definitions for citeproc citations
+\NewDocumentCommand\citeproctext{}{}
+\NewDocumentCommand\citeproc{mm}{%
+  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
+\makeatletter
+ % allow citations to break across lines
+ \let\@cite@ofmt\@firstofone
+ % avoid brackets around text for \cite:
+ \def\@biblabel#1{}
+ \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
+\makeatother
+\newlength{\cslhangindent}
+\setlength{\cslhangindent}{1.5em}
+\newlength{\csllabelwidth}
+\setlength{\csllabelwidth}{3em}
+\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
+ {\begin{list}{}{%
+  \setlength{\itemindent}{0pt}
+  \setlength{\leftmargin}{0pt}
+  \setlength{\parsep}{0pt}
+  % turn on hanging indent if param 1 is 1
+  \ifodd #1
+   \setlength{\leftmargin}{\cslhangindent}
+   \setlength{\itemindent}{-1\cslhangindent}
+  \fi
+  % set entry spacing
+  \setlength{\itemsep}{#2\baselineskip}}}
+ {\end{list}}
+\usepackage{calc}
+\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
+\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
+\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
-\makeatletter
-\makeatother
-\makeatletter
-\makeatother
+\KOMAoption{captions}{tableheading}
 \makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \AtBeginDocument{%
@@ -115,23 +151,16 @@
 \newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
 \makeatother
 \makeatletter
+\makeatother
+\makeatletter
 \@ifpackageloaded{caption}{}{\usepackage{caption}}
 \@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
-\makeatother
-\makeatletter
-\@ifpackageloaded{tcolorbox}{}{\usepackage[many]{tcolorbox}}
-\makeatother
-\makeatletter
-\@ifundefined{shadecolor}{\definecolor{shadecolor}{rgb}{.97, .97, .97}}
-\makeatother
-\makeatletter
 \makeatother
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
-\usepackage[]{natbib}
-\bibliographystyle{plainnat}
-\IfFileExists{bookmark.sty}{\usepackage{bookmark}}{\usepackage{hyperref}}
+\usepackage{bookmark}
+
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same} % disable monospaced font for URLs
 \hypersetup{
@@ -150,7 +179,7 @@ companies\thanks{Replication files are available on the
 \href{https://github.com/andrewmoles2/gender_pay_gap_example}{author's
 Github account}}}
 \author{Andrew Moles \and Anton Boichenko}
-\date{21 November, 2022}
+\date{2024-07-24}
 
 \begin{document}
 \maketitle
@@ -158,7 +187,6 @@ Github account}}}
 The gender pay gap has been an issue for generations, but how are UK
 companies doing in the current climate?
 \end{abstract}
-\ifdefined\Shaded\renewenvironment{Shaded}{\begin{tcolorbox}[enhanced, frame hidden, sharp corners, boxrule=0pt, borderline west={3pt}{0pt}{shadecolor}, breakable, interior hidden]}{\end{tcolorbox}}\fi
 
 \newpage
 
@@ -171,18 +199,19 @@ companies doing in the current climate?
 
 \newpage
 
-\hypertarget{introduction}{%
-\section{Introduction}\label{introduction}}
+\section{Introduction}\label{introduction}
 
-International women's day in 2022 was full of drama in the Twitter
-world. This was caused by the
-\href{https://genderpaygap.app/}{\emph{Gender Pay Gap Bot}}. Whenever a
-company listed on the
+International Women's day in 2022 was full of drama in the Twitter
+world, now known as X. This was caused by the \emph{Gender Pay Gap Bot}.
+Whenever a company listed on the
 \href{https://gender-pay-gap.service.gov.uk/}{governments gender pay gap
-service} tweets about international women's day, the bot will
-automatically respond with that companies median gender pay gap.
+service} tweets about International Women's day, the bot will
+automatically respond with that company's median gender pay gap score.
+It was designed to
+\href{https://www.independent.co.uk/tech/people-ryanair-manchester-the-new-york-times-university-b2296194.html}{pressure
+on companies to be accountable} for gender equality.
 
-\begin{figure}
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.7\textwidth,height=\textheight]{pay_gap_bot.png}
 
@@ -190,7 +219,7 @@ automatically respond with that companies median gender pay gap.
 
 \caption{The gender pay gap bot in action}
 
-\end{figure}
+\end{figure}%
 
 The bot caused a lot of companies to remove their tweets and even post
 some amendments. The point of the project was to call out companies that
@@ -202,8 +231,7 @@ patterns.
 
 \newpage
 
-\hypertarget{methods}{%
-\section{Methods}\label{methods}}
+\section{Methods}\label{methods}
 
 The data used for this report is from the UK
 \href{https://gender-pay-gap.service.gov.uk/}{governments gender pay gap
@@ -231,18 +259,16 @@ DiffMedianHourlyPercent columns is as follows:
 If females are paid better, the data will show a minus value for that
 column. This is because the original value in the formula is male as
 shown below:
-
 \[ {{male\_wage - female\_wage \over male\_wage}} \times 100 \]
 
 In the analysis of the data several R packages were used which are: the
-tidyverse \citep{tidyverse}, tidytext \citep{tidytext}, ggtext
-\citep{ggtext}, patchwork \citep{patchwork}, geogrid \citep{geogrid},
-rmapshaper \citep{rmapshaper}, and sf \citep{sf}.
+tidyverse (Wickham et al. 2019), tidytext (Silge and Robinson 2016),
+ggtext (Wilke 2020), patchwork (Pedersen 2020), geogrid (Bailey 2018),
+rmapshaper (Teucher and Russell 2022), and sf (Pebesma 2018).
 
 \newpage
 
-\hypertarget{results}{%
-\section{Results}\label{results}}
+\section{Results}\label{results}
 
 We can first look at the sector averages, here we are looking at the top
 10 sectors that have, on average, the largest percent gap in men's wages
@@ -253,16 +279,20 @@ industrial classification of economic activities (SIC) codes was used in
 an attempted to simplify the results.
 
 \begin{longtable}[]{@{}lc@{}}
-\toprule()
+\caption{Table to show the sectors with, on average, the largest percent
+gap in men's wages compared to women's wages.}\tabularnewline
+\toprule\noalign{}
 \textbf{sector} & \textbf{percent increase in mens wages compared to
 womens} \\
-\midrule()
+\midrule\noalign{}
 \endfirsthead
-\toprule()
+\toprule\noalign{}
 \textbf{sector} & \textbf{percent increase in mens wages compared to
 womens} \\
-\midrule()
+\midrule\noalign{}
 \endhead
+\bottomrule\noalign{}
+\endlastfoot
 primary & 0.2835 \\
 secondary & 0.2494 \\
 education & 0.2383 \\
@@ -273,9 +303,6 @@ information & 0.1892 \\
 head & 0.164 \\
 offices & 0.164 \\
 technical & 0.1615 \\
-\bottomrule()
-\caption{Table to show the sectors with, on average, the largest percent
-gap in men's wages compared to women's wages.}\tabularnewline
 \end{longtable}
 
 Ideas for this analysis were taken from from this blog post by
@@ -289,7 +316,11 @@ or black, the black hexagons indicating missing data for the postcode
 area. There are seemingly some areas where this isn't so much the case,
 which seem to be around Lancashire and Northumberland.
 
-\begin{figure}[p]
+The code for Figure \ref{fig:makefigure} came from
+\href{https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26}{Georgios
+Karamandis} as a Tidy Tuesday contribution.
+
+\begin{figure}[H]
 
 {\centering \includegraphics[width=0.8\textwidth,height=\textheight]{gender_pay_gap_files/figure-pdf/geomaps-1.pdf}
 
@@ -298,16 +329,11 @@ which seem to be around Lancashire and Northumberland.
 \caption{\label{fig:makefigure} Median percentage difference in hourly
 pay by postcode area and company size}
 
-\end{figure}
-
-The code for Figure \ref{fig:makefigure} came from
-\href{https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26}{Georgios
-Karamandis} as a Tidy Tuesday contribution.
+\end{figure}%
 
 \newpage
 
-\hypertarget{discussion}{%
-\section{Discussion}\label{discussion}}
+\section{Discussion}\label{discussion}
 
 Theresa May, in her first statement as Prime Minister highlighted that:
 
@@ -355,8 +381,44 @@ The reasons for the gender pay gap are complex and overlapping:
 
 \newpage
 
+\phantomsection\label{refs}
+\begin{CSLReferences}{1}{0}
+\bibitem[\citeproctext]{ref-geogrid}
+Bailey, Joseph. 2018. \emph{Geogrid: Turn Geospatial Polygons into
+Regular or Hexagonal Grids}.
+\url{https://CRAN.R-project.org/package=geogrid}.
 
-  \bibliography{references.bib}
+\bibitem[\citeproctext]{ref-sf}
+Pebesma, Edzer. 2018. {``{Simple Features for R: Standardized Support
+for Spatial Vector Data}.''} \emph{{The R Journal}} 10 (1): 439--46.
+\url{https://doi.org/10.32614/RJ-2018-009}.
+
+\bibitem[\citeproctext]{ref-patchwork}
+Pedersen, Thomas Lin. 2020. \emph{Patchwork: The Composer of Plots}.
+\url{https://CRAN.R-project.org/package=patchwork}.
+
+\bibitem[\citeproctext]{ref-tidytext}
+Silge, Julia, and David Robinson. 2016. {``Tidytext: Text Mining and
+Analysis Using Tidy Data Principles in r.''} \emph{JOSS} 1 (3).
+\url{https://doi.org/10.21105/joss.00037}.
+
+\bibitem[\citeproctext]{ref-rmapshaper}
+Teucher, Andy, and Kenton Russell. 2022. \emph{Rmapshaper: Client for
+'Mapshaper' for 'Geospatial' Operations}.
+\url{https://CRAN.R-project.org/package=rmapshaper}.
+
+\bibitem[\citeproctext]{ref-tidyverse}
+Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
+D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
+{``Welcome to the {tidyverse}.''} \emph{Journal of Open Source Software}
+4 (43): 1686. \url{https://doi.org/10.21105/joss.01686}.
+
+\bibitem[\citeproctext]{ref-ggtext}
+Wilke, Claus O. 2020. \emph{Ggtext: Improved Text Rendering Support for
+'Ggplot2'}. \url{https://CRAN.R-project.org/package=ggtext}.
+
+\end{CSLReferences}
+
 
 
 \end{document}

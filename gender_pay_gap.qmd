@@ -1,20 +1,20 @@
 ---
 format: 
   pdf: 
-    documentclass: article
+    documentclass: scrartcl
     # you can add toc commands here
     #toc: true
     #lot: true
     #lof: true
-    cap-location: bottom
     keep-tex: true
     colorlinks: true
-    cite-method: natbib
-pdf-engine: pdflatex
+    #cite-method: natbib
+pdf-engine: xelatex
+mainfont: Roboto
 urlcolor: blue
 linkcolor: red
 fontsize: 11pt
-#fontfamily: Roboto
+#reference-location: section
 geometry: margin=1in
 title: "An example document looking into the gender pay gap in UK companies"
 thanks: "Replication files are available on the [author's Github account](https://github.com/andrewmoles2/gender_pay_gap_example)"
@@ -30,48 +30,47 @@ bibliography: "references.bib"
 
 \newpage
 
+```{=tex}
 \raggedright
 \newpage
 \setcounter{tocdepth}{4}
 \tableofcontents
 \listoffigures
 \listoftables
-
+```
 \newpage
 
 # Introduction
 
-International women's day in 2022 was full of drama in the Twitter world. This was caused by the [*Gender Pay Gap Bot*](https://genderpaygap.app/). Whenever a company listed on the [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/) tweets about international women's day, the bot will automatically respond with that companies median gender pay gap. 
-
+International Women's day in 2022 was full of drama in the Twitter world, now known as X. This was caused by the *Gender Pay Gap Bot*. Whenever a company listed on the [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/) tweets about International Women's day, the bot will automatically respond with that company's median gender pay gap score. It was designed to [pressure on companies to be accountable](https://www.independent.co.uk/tech/people-ryanair-manchester-the-new-york-times-university-b2296194.html) for gender equality.
 
 ```{r botimage, echo=FALSE, fig.cap="The gender pay gap bot in action", out.width = '70%', fig.align='center'}
 knitr::include_graphics("pay_gap_bot.png")
 ```
 
+The bot caused a lot of companies to remove their tweets and even post some amendments. The point of the project was to call out companies that talked a good talk but had very poor gender pay equality.
 
-The bot caused a lot of companies to remove their tweets and even post some amendments. The point of the project was to call out companies that talked a good talk but had very poor gender pay equality. 
-
-This report wanted to look more into the governments gender pay gap service data to see if we could see any extra insights or interesting patterns. 
+This report wanted to look more into the governments gender pay gap service data to see if we could see any extra insights or interesting patterns.
 
 \newpage
 
 # Methods
 
-The data used for this report is from the UK [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/). This data has been helpfully hosted and joined together by [the TidyTuesday project](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-06-28). 
+The data used for this report is from the UK [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/). This data has been helpfully hosted and joined together by [the TidyTuesday project](https://github.com/rfordatascience/tidytuesday/tree/master/data/2022/2022-06-28).
 
 There are several variables of interest which we can use in an analysis of this data: DiffMeanHourlyPercent, DiffMedianHourlyPercent, PostCode, SicCodes, and EmployerSize.
 
-DiffMeanHourlyPercent and DiffMedianHourlyPercent are the mean or median % difference between male and female hourly pay (negative = women's mean/median hourly pay is higher). PostCode is each companies postal code. SicCodes are used to describe the employer's purpose and sectors of work at the time of reporting, e.g. the company is in the finance sector. EmployerSize indicates the number of employers which is grouped into bands such as *250 to 499* or *5000 to 19,999*. 
+DiffMeanHourlyPercent and DiffMedianHourlyPercent are the mean or median % difference between male and female hourly pay (negative = women's mean/median hourly pay is higher). PostCode is each companies postal code. SicCodes are used to describe the employer's purpose and sectors of work at the time of reporting, e.g. the company is in the finance sector. EmployerSize indicates the number of employers which is grouped into bands such as *250 to 499* or *5000 to 19,999*.
 
 The formula used to calculate the DiffMeanHourlyPercent and DiffMedianHourlyPercent columns is as follows:
 
 $$ {{value_{original} - value_{new}} \over {value_{original}}} \times 100 $$
 
-If females are paid better, the data will show a minus value for that column. This is because the original value in the formula is male as shown below:
-$$ {{male\_wage - female\_wage \over male\_wage}} \times 100 $$
+If females are paid better, the data will show a minus value for that column. This is because the original value in the formula is male as shown below: $$ {{male\_wage - female\_wage \over male\_wage}} \times 100 $$
 
-In the analysis of the data several R packages were used which are: the tidyverse [@tidyverse], tidytext [@tidytext], ggtext [@ggtext], patchwork [@patchwork], geogrid [@geogrid], rmapshaper [@rmapshaper], and sf [@sf]. 
+In the analysis of the data several R packages were used which are: the tidyverse [@tidyverse], tidytext [@tidytext], ggtext [@ggtext], patchwork [@patchwork], geogrid [@geogrid], rmapshaper [@rmapshaper], and sf [@sf].
 
+````{=html}
 <!--
 An example of the formula in action. 
 ```{r}
@@ -84,35 +83,40 @@ diff_hourly <- round(diff_hourly, 2)
 paste0(diff_hourly, "% difference between male and female hourly salaries")
 ```
 -->
+````
 
 \newpage
 
 # Results
 
-We can first look at the sector averages, here we are looking at the top 10 sectors that have, on average, the largest percent gap in men's wages compared to women's wages. To get the sectors, Tokenisation[^1] of Standard industrial classification of economic activities (SIC) codes was used in an attempted to simplify the results. 
+We can first look at the sector averages, here we are looking at the top 10 sectors that have, on average, the largest percent gap in men's wages compared to women's wages. To get the sectors, Tokenisation[^1] of Standard industrial classification of economic activities (SIC) codes was used in an attempted to simplify the results.
 
-[^1]: Tokenisation is a way of separating text into smaller units called *tokens*, which can be either words, characters or sub words. 
+[^1]: Tokenisation is a way of separating text into smaller units called *tokens*, which can be either words, characters or sub words.
+
 
 | **sector**   | **percent increase in mens wages compared to womens** |
 |--------------|:-----------------------------------------------------:|
-| primary      | 0.2835                                                |
-| secondary    | 0.2494                                                |
-| education    | 0.2383                                                |
-| financial    | 0.2112                                                |
-| construction | 0.1978                                                |
-| technology   | 0.1932                                                |
-| information  | 0.1892                                                |
-| head         | 0.164                                                 |
-| offices      | 0.164                                                 |
-| technical    | 0.1615                                                |
+| primary      |                        0.2835                         |
+| secondary    |                        0.2494                         |
+| education    |                        0.2383                         |
+| financial    |                        0.2112                         |
+| construction |                        0.1978                         |
+| technology   |                        0.1932                         |
+| information  |                        0.1892                         |
+| head         |                         0.164                         |
+| offices      |                         0.164                         |
+| technical    |                        0.1615                         |
 
-Table: Table to show the sectors with, on average,  the largest percent gap in men's wages compared to women's wages.
+: Table to show the sectors with, on average, the largest percent gap in men's wages compared to women's wages.
 
 Ideas for this analysis were taken from from this blog post by [Julia Silge](https://juliasilge.com/blog/pay-gap-uk/).
 
-A more elaborate analysis we can do is to look at the gender pay gap by company size and by postcode area. Figure \ref{fig:makefigure} gives us an overall general picture of this difference by area. The clearest outcome here is that most of the grids for all employee sizes are green or black, the black hexagons indicating missing data for the postcode area. There are seemingly some areas where this isn't so much the case, which seem to be around Lancashire and Northumberland. 
+A more elaborate analysis we can do is to look at the gender pay gap by company size and by postcode area. Figure \ref{fig:makefigure} gives us an overall general picture of this difference by area. The clearest outcome here is that most of the grids for all employee sizes are green or black, the black hexagons indicating missing data for the postcode area. There are seemingly some areas where this isn't so much the case, which seem to be around Lancashire and Northumberland.
 
-```{r geomaps, message=FALSE, warning=FALSE, echo=FALSE, fig.fullwidth=TRUE, fig.align='center', fig.width=10, fig.height=11, fig.cap="\\label{fig:makefigure} Median percentage difference in hourly pay by postcode area and company size", out.width="80%", fig.pos="p"}
+The code for Figure \ref{fig:makefigure} came from [Georgios Karamandis](https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26) as a Tidy Tuesday contribution.
+
+
+```{r geomaps, message=FALSE, warning=FALSE, echo=FALSE, fig.fullwidth=TRUE, fig.align='center', fig.width=10, fig.height=11, fig.cap="\\label{fig:makefigure} Median percentage difference in hourly pay by postcode area and company size", out.width="80%", fig.pos="h"}
 # all code from: https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26
 library(tidyverse, quietly = TRUE)
 library(patchwork, quietly = TRUE)
@@ -243,8 +247,6 @@ final
 ```
 
 
-The code for Figure \ref{fig:makefigure} came from [Georgios Karamandis](https://github.com/gkaramanis/tidytuesday/tree/master/2022/2022-week_26) as a Tidy Tuesday contribution. 
-
 \newpage
 
 # Discussion
@@ -253,7 +255,7 @@ Theresa May, in her first statement as Prime Minister highlighted that:
 
 > "If you’re a woman, you will earn less than a man."
 
-Our results show that on average, this is still the case but there are a lot of caveats. 
+Our results show that on average, this is still the case but there are a lot of caveats.
 
 Pay between genders is complicated as it does vary over a lifetime. It can differ depending on whether you are looking at full-time or part-time working (or both), what age you are, what ethnicity you are and your seniority within an occupation. For example there may be a wider (or narrower) GPG in those earning a higher salary as an actor than in those earning a lower salary.
 
@@ -263,12 +265,12 @@ It’s also important to consider the ratio of men to women in each occupation a
 
 The reasons for the gender pay gap are complex and overlapping:
 
-- girls do well at school but often choose occupations or sectors that offer narrower scope for financial reward - many of the highest paying sectors are disproportionately made up of male employees.
+-   girls do well at school but often choose occupations or sectors that offer narrower scope for financial reward - many of the highest paying sectors are disproportionately made up of male employees.
 
-- a proportion of the gap may be due to the negative effect on wages of having worked part-time or having taken time out of the labour market to look after family.
+-   a proportion of the gap may be due to the negative effect on wages of having worked part-time or having taken time out of the labour market to look after family.
 
-- women may not progress in work at the same rate as men due to cultural attitudes, lack of flexible working and stereotyping.
+-   women may not progress in work at the same rate as men due to cultural attitudes, lack of flexible working and stereotyping.
 
-- some older women may need to learn new skills to take advantage of employment opportunities in growing sectors; others may have increased caring responsibilities for partners, grandchildren or ageing parents.
+-   some older women may need to learn new skills to take advantage of employment opportunities in growing sectors; others may have increased caring responsibilities for partners, grandchildren or ageing parents.
 
 \newpage

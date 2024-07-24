@@ -39,8 +39,7 @@ biblio-style: apsr
 
 # Introduction
 
-International women's day in 2022 was full of drama in the Twitter world. This was caused by the [*Gender Pay Gap Bot*](https://genderpaygap.app/). Whenever a company listed on the [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/) tweets about international women's day, the bot will automatically respond with that companies median gender pay gap. 
-
+International Women's day in 2022 was full of drama in the Twitter world, now known as X.  This was caused by the *Gender Pay Gap Bot*. Whenever a company listed on the [governments gender pay gap service](https://gender-pay-gap.service.gov.uk/) tweets about International Women's day, the bot will automatically respond with that company's median gender pay gap score. It was designed to [https://www.independent.co.uk/tech/people-ryanair-manchester-the-new-york-times-university-b2296194.html](pressure on companies to be accountable) for gender equality.
 
 ```{r botimage, echo=FALSE, fig.cap="The gender pay gap bot in action", out.width = '70%', fig.align='center'}
 knitr::include_graphics("pay_gap_bot.png")
