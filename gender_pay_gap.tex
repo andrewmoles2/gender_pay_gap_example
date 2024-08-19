@@ -80,39 +80,6 @@
 \makeatletter
 \def\fps@figure{htbp}
 \makeatother
-% definitions for citeproc citations
-\NewDocumentCommand\citeproctext{}{}
-\NewDocumentCommand\citeproc{mm}{%
-  \begingroup\def\citeproctext{#2}\cite{#1}\endgroup}
-\makeatletter
- % allow citations to break across lines
- \let\@cite@ofmt\@firstofone
- % avoid brackets around text for \cite:
- \def\@biblabel#1{}
- \def\@cite#1#2{{#1\if@tempswa , #2\fi}}
-\makeatother
-\newlength{\cslhangindent}
-\setlength{\cslhangindent}{1.5em}
-\newlength{\csllabelwidth}
-\setlength{\csllabelwidth}{3em}
-\newenvironment{CSLReferences}[2] % #1 hanging-indent, #2 entry-spacing
- {\begin{list}{}{%
-  \setlength{\itemindent}{0pt}
-  \setlength{\leftmargin}{0pt}
-  \setlength{\parsep}{0pt}
-  % turn on hanging indent if param 1 is 1
-  \ifodd #1
-   \setlength{\leftmargin}{\cslhangindent}
-   \setlength{\itemindent}{-1\cslhangindent}
-  \fi
-  % set entry spacing
-  \setlength{\itemsep}{#2\baselineskip}}}
- {\end{list}}
-\usepackage{calc}
-\newcommand{\CSLBlock}[1]{\hfill\break\parbox[t]{\linewidth}{\strut\ignorespaces#1\strut}}
-\newcommand{\CSLLeftMargin}[1]{\parbox[t]{\csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLRightInline}[1]{\parbox[t]{\linewidth - \csllabelwidth}{\strut#1\strut}}
-\newcommand{\CSLIndent}[1]{\hspace{\cslhangindent}#1}
 
 \KOMAoption{captions}{tableheading}
 \makeatletter
@@ -159,6 +126,8 @@
 \ifLuaTeX
   \usepackage{selnolig}  % disable illegal ligatures
 \fi
+\usepackage[]{natbib}
+\bibliographystyle{apalike}
 \usepackage{bookmark}
 
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
@@ -179,7 +148,7 @@ companies\thanks{Replication files are available on the
 \href{https://github.com/andrewmoles2/gender_pay_gap_example}{author's
 Github account}}}
 \author{Andrew Moles \and Anton Boichenko}
-\date{2024-07-24}
+\date{2024-08-16}
 
 \begin{document}
 \maketitle
@@ -262,9 +231,9 @@ shown below:
 \[ {{male\_wage - female\_wage \over male\_wage}} \times 100 \]
 
 In the analysis of the data several R packages were used which are: the
-tidyverse (Wickham et al. 2019), tidytext (Silge and Robinson 2016),
-ggtext (Wilke 2020), patchwork (Pedersen 2020), geogrid (Bailey 2018),
-rmapshaper (Teucher and Russell 2022), and sf (Pebesma 2018).
+tidyverse \citep{tidyverse}, tidytext \citep{tidytext}, ggtext
+\citep{ggtext}, patchwork \citep{patchwork}, geogrid \citep{geogrid},
+rmapshaper \citep{rmapshaper}, and sf \citep{sf}.
 
 \newpage
 
@@ -381,44 +350,8 @@ The reasons for the gender pay gap are complex and overlapping:
 
 \newpage
 
-\phantomsection\label{refs}
-\begin{CSLReferences}{1}{0}
-\bibitem[\citeproctext]{ref-geogrid}
-Bailey, Joseph. 2018. \emph{Geogrid: Turn Geospatial Polygons into
-Regular or Hexagonal Grids}.
-\url{https://CRAN.R-project.org/package=geogrid}.
 
-\bibitem[\citeproctext]{ref-sf}
-Pebesma, Edzer. 2018. {``{Simple Features for R: Standardized Support
-for Spatial Vector Data}.''} \emph{{The R Journal}} 10 (1): 439--46.
-\url{https://doi.org/10.32614/RJ-2018-009}.
-
-\bibitem[\citeproctext]{ref-patchwork}
-Pedersen, Thomas Lin. 2020. \emph{Patchwork: The Composer of Plots}.
-\url{https://CRAN.R-project.org/package=patchwork}.
-
-\bibitem[\citeproctext]{ref-tidytext}
-Silge, Julia, and David Robinson. 2016. {``Tidytext: Text Mining and
-Analysis Using Tidy Data Principles in r.''} \emph{JOSS} 1 (3).
-\url{https://doi.org/10.21105/joss.00037}.
-
-\bibitem[\citeproctext]{ref-rmapshaper}
-Teucher, Andy, and Kenton Russell. 2022. \emph{Rmapshaper: Client for
-'Mapshaper' for 'Geospatial' Operations}.
-\url{https://CRAN.R-project.org/package=rmapshaper}.
-
-\bibitem[\citeproctext]{ref-tidyverse}
-Wickham, Hadley, Mara Averick, Jennifer Bryan, Winston Chang, Lucy
-D'Agostino McGowan, Romain François, Garrett Grolemund, et al. 2019.
-{``Welcome to the {tidyverse}.''} \emph{Journal of Open Source Software}
-4 (43): 1686. \url{https://doi.org/10.21105/joss.01686}.
-
-\bibitem[\citeproctext]{ref-ggtext}
-Wilke, Claus O. 2020. \emph{Ggtext: Improved Text Rendering Support for
-'Ggplot2'}. \url{https://CRAN.R-project.org/package=ggtext}.
-
-\end{CSLReferences}
-
+  \bibliography{references.bib}
 
 
 \end{document}

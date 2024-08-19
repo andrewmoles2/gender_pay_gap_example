@@ -8,7 +8,8 @@ format:
     #lof: true
     keep-tex: true
     colorlinks: true
-    #cite-method: natbib
+    cite-method: natbib
+    biblio-style: apalike
 pdf-engine: xelatex
 mainfont: Roboto
 urlcolor: blue
