@@ -10,8 +10,12 @@ format:
     colorlinks: true
     cite-method: natbib
     biblio-style: apalike
-pdf-engine: xelatex
-mainfont: Roboto
+    pdf-engine: lualatex
+    sansfont: 'Roboto'
+#    include-in-header: 
+#      - text: |
+#          \usepackage[sfdefault,light]{roboto}
+#          \usepackage[T1]{fontenc}
 urlcolor: blue
 linkcolor: red
 fontsize: 11pt
